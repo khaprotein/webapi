@@ -17,36 +17,41 @@ namespace store_api.Controllers
         public ActionResult Index()
         {
             return View();
-        }
+        }    
 
         [HttpPost]
-        public ActionResult Index(string email, string pass)
+        public ActionResult dangnhapp(string email, string pass)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                var user = db.Users.SingleOrDefault(u => u.email == email && u.password == pass);
+                User user = db.Users.SingleOrDefault(u => u.email == email && u.password == pass);
                 if (user != null)
                 {
-                    if (user.Role.role_name == "R2")
+                    if (user.role_id == "R2")
                     {
-                        TempData["SuccessMessage"] = "Chào mừng " + user.name;
-
+                        TempData["SuccessMessage"] = "Chào mừng " + user.name + " "+user.user_id;
                         // Lưu ID người dùng vào Session
-                        Session["UserID"] = user.user_id;
-
+                        Session["user"] = user;
                         // Redirect đến trang chính sau khi đăng nhập thành công
                         return RedirectToAction("Index", "Home");
                     }
-
-                } 
-                ModelState.AddModelError("", "Email hoặc mật khẩu không chính xác.");
-                return View();
-
+                }
+                ModelState.AddModelError("email", "Email hoặc mật khẩu không chính xác.");
+                return View("Index");
             }
-            return View();
+            return View("Index");
         }
+       
+            // Action đăng xuất
+            public ActionResult Dangxuat()
+            {
+                // Xóa Session user
+                Session["user"] = null;
 
-
+                // Chuyển hướng đến trang chính sau khi đăng xuất
+                return RedirectToAction("Index", "Home");
+            }
+     
 
 
     }
