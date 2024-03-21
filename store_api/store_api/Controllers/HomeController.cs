@@ -14,10 +14,20 @@ namespace store_api.Controllers
         Store_apiEntities db = new Store_apiEntities();
         public async Task<ActionResult> Index()
         {
-          
             if (TempData["SuccessMessage"] != null)
             {
                 ViewBag.SuccessMessage = TempData["SuccessMessage"].ToString();
+            }
+            if (Session["user"] != null)
+            {
+                var user = (User)Session["user"];
+                var cartItems = db.Shopping_Cart.Where(c => c.user_id == user.user_id);
+                int totalQuantity = cartItems.Any() ? (int)cartItems.Sum(c => c.quantity) : 0;
+                ViewBag.TotalQuantity = totalQuantity;
+            }
+            else
+            {
+                ViewBag.TotalQuantity = 0;
             }
             var list = await GetAllProduct();
             return View(list);

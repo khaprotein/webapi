@@ -14,11 +14,7 @@ namespace store_api.Controllers
     {
         // GET: Sanpham
         Store_apiEntities db = new Store_apiEntities();
-        public ActionResult Gio_hang()
-        {
-            return View();
-        }
-
+       
         public async Task<ActionResult> product(string id_product)
         {
             var sp = await GetProduct(id_product);

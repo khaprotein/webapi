@@ -32,6 +32,8 @@ namespace store_api.Controllers
                         TempData["SuccessMessage"] = "Chào mừng " + user.name + " "+user.user_id;
                         // Lưu ID người dùng vào Session
                         Session["user"] = user;
+                        
+
                         // Redirect đến trang chính sau khi đăng nhập thành công
                         return RedirectToAction("Index", "Home");
                     }
