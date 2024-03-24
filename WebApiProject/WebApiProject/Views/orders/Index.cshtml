@@ -1,0 +1,79 @@
+﻿@{
+    ViewBag.Title = "Orderlist";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model List<WebApiProject.Models.Order>
+
+<!-- Cart Page Start -->
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Đơn hàng</th>
+                        <th scope="col">Ngày đặt</th>
+                        <th scope="col">Tổng tiền</th>
+                        <th scope="col">Địa chỉ giao</th>
+                        <th scope="col">Số điện thoại</th>
+                        <th scope="col">Trạng thái</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <th>
+                                <p class="mb-0 mt-4">@item.orders_id</p>
+                            </th>
+                            <td>
+                                <p class="mb-0 mt-4">@item.orders_date</p>
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4">@item.total_amount</p>
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4">@item.shipping_address</p>
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4">@item.user_phone</p>     
+                            </td> 
+                            <td>
+                                @using (Html.BeginForm("DeleteCart", "cart", FormMethod.Post))
+                                {
+                                    @Html.Hidden("cartid", item.cart_id)
+                                    <button type="submit" class="btn btn-md rounded-circle bg-light border mt-4">
+                                        <i class="fa fa-times text-danger"></i>
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td colspan="4"></td>
+                        <td colspan="2" class="text-end">
+                            @using (Html.BeginForm("Createorder", "order", FormMethod.Post))
+                            {
+
+                                <div class="input-group mt-4">
+                                    <p class="mb-0 mt-2">Địa chỉ giao hàng:</p>
+                                    <input type="text" name="shippingAddress" class="form-control" value="@((Model.FirstOrDefault()?.User?.address) ?? "")">
+                                </div>
+                                <div class="mb-0 mt-2">
+                                    Phí vận chuyển: 40.00
+                                </div>
+                                <input type="hidden" name="totalAmount" value="@((Model.Sum(item => item.quantity * item.Product.price)) + 40)"> <!-- Trường ẩn để chứa tổng giá trị -->
+                                <p class="mb-0 mt-2">
+                                    <strong>Tổng giá trị:</strong>  @((Model.Sum(item => item.quantity * item.Product.price)) + 40) <!-- Tổng giá trị cộng thêm phí vận chuyển, mặc định là 40.00 -->
+                                </p>
+                                <button type="submit" class="btn btn-primary mt-2">Đặt hàng</button> <!-- Nút đặt hàng -->
+                            }
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
