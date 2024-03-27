@@ -11,7 +11,9 @@ namespace WebApiProject.Controllers.Orders
 {
     public class ordersController : Controller
     {
-        Database1Entities db = new Database1Entities();
+        Database1Entities1 db = new Database1Entities1();
+        private static int _latestOrderId = 0;
+        private static int _latestOrderDetailId = 0;
         // GET: orders
         public async Task<ActionResult> Index(string user_id)
         {
@@ -19,7 +21,7 @@ namespace WebApiProject.Controllers.Orders
 
             return View(list);
         }
-        public async Task<List<Order>> Getorder(string user_id)
+        public async Task<List<DonHang>> Getorder(string user_id)
         {
             string baseUrl = Request.Url.Scheme + "://" + Request.Url.Authority +
             Request.ApplicationPath.TrimEnd('/') + "/";
@@ -28,8 +30,8 @@ namespace WebApiProject.Controllers.Orders
                 HttpResponseMessage res = await httpClient.GetAsync(baseUrl + "api/Orders/Getorders?id_user=" + user_id);
                 if (res.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    List<Order> list = new List<Order>();
-                    list = res.Content.ReadAsAsync<List<Order>>().Result;
+                    List<DonHang> list = new List<DonHang>();
+                    list = res.Content.ReadAsAsync<List<DonHang>>().Result;
                     return list;
                 }
                 return null;
@@ -38,7 +40,6 @@ namespace WebApiProject.Controllers.Orders
 
         public class OrderIdGenerator
         {
-            private static int _latestOrderId = 0;
             public static string GenerateOrderId()
             {
                 _latestOrderId++;
@@ -46,6 +47,7 @@ namespace WebApiProject.Controllers.Orders
             }
         }
 
+        [HttpPost]
         public async Task<ActionResult> Createorder(string shippingAddress, decimal totalAmount)
         {
             if (totalAmount == 40)
@@ -54,7 +56,7 @@ namespace WebApiProject.Controllers.Orders
                 return RedirectToAction("Index", "Cart");
             }
             var user  = (User)Session["user"]; ;
-            Order neworder = new Order
+            DonHang neworder = new DonHang
             {
                 orders_id = OrderIdGenerator.GenerateOrderId(),
                 user_id = user.user_id,
@@ -63,6 +65,7 @@ namespace WebApiProject.Controllers.Orders
                 shipping_address = shippingAddress,
                 user_phone = user.phonenumber,
                 oderstatus_id = 1
+
             };
 
             string baseUrl = Request.Url.Scheme + "://" + Request.Url.Authority +
@@ -73,7 +76,8 @@ namespace WebApiProject.Controllers.Orders
                 if (res.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     return RedirectToAction("Createorderdetail", new { id_order = neworder.orders_id, id_user = user.user_id });
-
+                    //TempData["SuccessMessage"] = "Đơn hàng đã được đặt!";
+                    //return RedirectToAction("Index", "Cart");
                 }
                 TempData["ErrorMessage"] = "Đơn hàng không đặt được!";
                 return RedirectToAction("Index", "Cart");
@@ -84,22 +88,22 @@ namespace WebApiProject.Controllers.Orders
 
         public async Task<ActionResult> detail(string id_order)
         {
-            var user = (User)Session["user"];
-            var list = await Getorder(user.user_id);
+           
+            var list = await GetDetail(id_order);
 
             return View(list);
         }
-        public async Task<List<Order>> GetDetail(string id_order)
+        public async Task<List<ChiTietDH>> GetDetail(string id_order)
         {
             string baseUrl = Request.Url.Scheme + "://" + Request.Url.Authority +
             Request.ApplicationPath.TrimEnd('/') + "/";
             using (var httpClient = new HttpClient())
             {
-                HttpResponseMessage res = await httpClient.GetAsync(baseUrl + "api/Orders/Getdetail?id_order=" +  id_order);
+                HttpResponseMessage res = await httpClient.GetAsync(baseUrl + "api/Detail/Getdetail?id_order=" +  id_order);
                 if (res.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    List<Order> list = new List<Order>();
-                    list = res.Content.ReadAsAsync<List<Order>>().Result;
+                    List<ChiTietDH> list = new List<ChiTietDH>();
+                    list = res.Content.ReadAsAsync<List<ChiTietDH>>().Result;
                     return list;
                 }
                 return null;
@@ -109,8 +113,7 @@ namespace WebApiProject.Controllers.Orders
 
 
         public class OrderDetailIdGenerator
-        {
-            private static int _latestOrderDetailId = 0;
+        {  
             public static string GenerateOrderDetailId()
             {
                 _latestOrderDetailId++;
@@ -124,11 +127,11 @@ namespace WebApiProject.Controllers.Orders
             {
                 foreach (var item in cartItems)
                 {
-                    Order_Details newOD = new Order_Details
+                    ChiTietDH newOD = new ChiTietDH
                     {
                         order_details_id = OrderDetailIdGenerator.GenerateOrderDetailId(),
                         order_id = id_order,
-                        product_id = item.product_id,
+                        product_size_quantity_id = item.product_size_quantity_id,
                         quantity = item.quantity,
                         price_oder = item.Product.price
                     };
@@ -136,7 +139,7 @@ namespace WebApiProject.Controllers.Orders
                     string baseUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + "/";
                     using (var httpClient = new HttpClient())
                     {
-                        HttpResponseMessage res = await httpClient.PostAsJsonAsync(baseUrl + "api/Orders/PostDetail", newOD);
+                        HttpResponseMessage res = await httpClient.PostAsJsonAsync(baseUrl + "api/Detail/PostDetail", newOD);
                         if (res.StatusCode == System.Net.HttpStatusCode.OK)
                         {
                             // Nếu thành công, gửi thông báo thành công và tiếp tục vòng lặp
@@ -144,7 +147,8 @@ namespace WebApiProject.Controllers.Orders
                         }
                         else
                         {
-                            TempData["ErrorMessage"] = "Đơn hàng không đặt được!";
+                            //TempData["ErrorMessage"] = "Đơn hàng không đặt được!";
+                            TempData["ErrorMessage"] = "Loi tao chi  tiet don hang!";
                             return RedirectToAction("Index", "Cart");
                         }
                     }

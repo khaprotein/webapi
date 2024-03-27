@@ -10,16 +10,38 @@ namespace WebApiProject.APIController
 {
     public class UsersController : ApiController
     {
-        Database1Entities db = new Database1Entities();
-        public List<User> Getuser()
+        Database1Entities1 db = new Database1Entities1();
+        public IHttpActionResult Getuser()
         {
-            return db.Users.ToList();
+            var list = db.Users.Select(u=>new NguoiDung{
+                user_id = u.user_id,
+                role_id = u.role_id,
+                name = u.name,
+                email = u.email,
+                phonenumber = u.phonenumber,
+                password = u.password,
+                address = u.address
+            }).ToList();
+
+            return Ok(list);
         }
 
         [HttpGet]
-        public User Getuserbyid(string id_user)
+        public IHttpActionResult Getuserbyid(string id_user)
         {
-            return db.Users.Where(c=>c.user_id==id_user).FirstOrDefault();
+            var u = db.Users.Where(c => c.user_id == id_user).FirstOrDefault();
+            
+            NguoiDung user =  new NguoiDung
+            {
+                user_id = u.user_id,
+                role_id = u.role_id,
+                name = u.name,
+                email = u.email,
+                phonenumber = u.phonenumber,
+                password = u.password,
+                address = u.address
+            };
+            return Ok(user);
         }
         [HttpPost]
         public HttpResponseMessage Postuser(User user)
@@ -29,7 +51,7 @@ namespace WebApiProject.APIController
             return Request.CreateResponse(HttpStatusCode.OK); 
         }
         [HttpPut]
-        public void Putuser(User user)
+        public HttpResponseMessage Putuser(NguoiDung user)
         {
             User olduser = db.Users.Where(c => c.user_id == user.user_id).FirstOrDefault();
             olduser.name = user.name;
@@ -40,6 +62,7 @@ namespace WebApiProject.APIController
             olduser.address = user.address;
 
             db.SaveChanges();
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
     }
 }

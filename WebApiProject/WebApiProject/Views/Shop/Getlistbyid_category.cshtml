@@ -1,0 +1,107 @@
+﻿@*@model List<WebApiProject.Models.Shoes>*@
+@using PagedList.Mvc;
+@using PagedList;
+@model PagedList.IPagedList<WebApiProject.Models.Shoes>
+
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    WebApiProject.Models.Database1Entities1 db = new WebApiProject.Models.Database1Entities1();
+    var list = db.Categories.ToList();
+}
+
+<!-- Single Page Header start -->
+<div class="container py-5">
+</div>
+<!-- Single Page Header End -->
+<!-- Fruits Shop Start-->
+<div class="container-fluid fruite py-5">
+    <div class="container py-5">
+        <h1 class="mb-4">Sản phẩm:</h1>
+        <div class="row g-4">
+            <div class="col-lg-12">
+                <div class="row g-4">
+                    <div class="col-xl-3">
+                        <div class="input-group w-100 mx-auto d-flex">
+                            <input type="search" class="form-control p-3" placeholder="keywords" aria-describedby="search-icon-1">
+                            <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-3">
+                        <div class="row g-4">
+                            <div class="col-lg-12">
+                                <div class="mb-3">
+                                    <h4>Categories</h4>
+                                    @* List category loại giày *@
+                                    <ul class="list-unstyled fruite-categorie">
+                                        @foreach (var item in list)
+                                        {
+                                            <li>
+                                                <div class="d-flex justify-content-between fruite-name">
+                                                    <a href="@Url.Action("Getlistbyid_category", new {page = 1 , id_category = item.category_id })"><i class="fas fa-apple-alt me-2"></i>@item.category_name</a>
+
+                                                </div>
+                                            </li>
+
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="mb-3">
+                                    <h4 class="mb-2">Price</h4>
+                                    <input type="range" class="form-range w-100" id="rangeInput" name="rangeInput" min="0" max="500" value="0" oninput="amount.value=rangeInput.value">
+                                    <output id="amount" name="amount" min-velue="0" max-value="500" for="rangeInput">0</output>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-9">
+                        @{
+                            int idcategory = 0; // Khởi tạo biến idcategory
+                        }
+                        <div class="row g-4 justify-content-center">
+                            @foreach (var item in Model)
+                            {
+                                idcategory = item.category_id ?? default(int);
+                                <div class="col-md-6 col-lg-6 col-xl-4">
+                                    <div class="rounded position-relative fruite-item">
+                                        <div class="fruite-img">
+                                            <a href="@Url.Action("ProductDetail", "Shop",new { id_product = item.product_id })">
+                                                <img src="~/Content/@item.productimage_url" class="img-fluid w-100 rounded-top" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                            <h5>@item.product_name</h5>
+                                            <div class="d-flex justify-content-between flex-lg-wrap">
+                                                <p class="text-dark fs-5 fw-bold mb-0">@item.price</p>
+                                                <a href="@Url.Action("ProductDetail", "Shop", new { id_product = item.product_id})" class="btn border border-secondary rounded-pill px-3 text-primary" data-id="@item.product_id">
+                                                    <i class="fa fa-shopping-bag me-2 text-primary"></i> Mua
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="col-12">
+                                <div class="pagination d-flex justify-content-center mt-5">
+                                    <a href="#" class="rounded">&laquo;</a>
+                                    @for (int i = 1; i <= Model.PageCount; i++)
+                                    {
+                                        <a href="@Url.Action("Getlistbyid_category", new { page = i,id_category = idcategory})" class="rounded @(i == Model.PageNumber ? "active" : "")">@i</a>
+                                    }
+                                    <a href="#" class="rounded">&raquo;</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fruits Shop End-->

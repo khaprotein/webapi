@@ -1,0 +1,68 @@
+﻿
+@{
+    ViewBag.Title = "detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model IEnumerable<WebApiProject.Models.ChiTietDH> 
+<div class="container">
+    <div class="container-fluid py-5">
+        <div class="container py-5">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Sản phẩm</th>
+                            <th scope="col">Tên giày</th>
+                            <th scope="col">Size</th>
+                            <th scope="col">Giá</th>
+                            <th scope="col">Số lượng</th>
+                            <th scope="col">Tổng</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <th scope="row">
+                                    <div class="d-flex align-items-center">
+                                        <img src="~/Content/@item.hinhanh" class="img-fluid me-5 rounded-circle" style="width: 100px; height: 100px;" alt="">
+                                    </div>
+                                </th>
+                                <td>
+                                        <p class="mb-0 mt-4">@item.tensanpham</p>
+                                </td>
+                                <td>
+                                    <p class="mb-0 mt-4">@item.kichthuoc</p>
+                                </td>
+                                <td>
+                                    <p class="mb-0 mt-4">@item.price_oder</p>
+                                </td> 
+                                <td>
+                                    <p class="mb-0 mt-4">@item.quantity</p>
+                                </td>
+                                <td>
+                                    <p class="mb-0 mt-4">@((item.quantity * item.price_oder))</p>
+                                </td>                          
+                            </tr>
+                        }  
+
+                     <tr>
+                        <td colspan="2" class="text-end">
+
+                        </td>
+                    </tr> 
+                    
+                </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+

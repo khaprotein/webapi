@@ -9,7 +9,7 @@ namespace WebApiProject.Controllers.Login
 {
     public class LoginController : Controller
     {
-        Database1Entities db = new Database1Entities();
+        Database1Entities1 db = new Database1Entities1();
 
         // GET: Login
         public ActionResult Index()

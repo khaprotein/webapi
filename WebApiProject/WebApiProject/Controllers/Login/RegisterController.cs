@@ -12,7 +12,7 @@ namespace WebApiProject.Controllers.Login
 {
     public class RegisterController : Controller
     {
-        Database1Entities db = new Database1Entities();
+        Database1Entities1 db = new Database1Entities1();
         
         // GET: Register
         public ActionResult Index()
@@ -52,7 +52,7 @@ namespace WebApiProject.Controllers.Login
                   
                 string newUserId = UserIdGenerator.GenerateUserId();
                 // Tạo một đối tượng User mới và lưu vào cơ sở dữ liệu
-                User newUser = new User
+               User newUser = new User
                 {
                     user_id = newUserId,
                     role_id = "R2",

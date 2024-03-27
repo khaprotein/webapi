@@ -6,14 +6,16 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using WebApiProject.Models;
+using PagedList;
+
 
 namespace WebApiProject.Controllers
 {
     public class HomeController : Controller
 
     {
-        Database1Entities db = new Database1Entities();
-        public async Task<ActionResult> Index()
+        Database1Entities1 db = new Database1Entities1();    
+        public async Task<ActionResult> Index(int? page)
         {
             if (TempData["SuccessMessage"] != null)
             {
@@ -35,9 +37,21 @@ namespace WebApiProject.Controllers
                 ViewBag.TotalQuantity = 0;
             }
 
+            int pageSize = 12;
+            int pageNumber = (page ?? 1);
             List<Shoes> list = await GetProduct();
-            return View(list);
+            return View(list.ToPagedList(pageNumber,pageSize));
         }
+
+        public async Task<ActionResult> Getlistbyid_category(int? page, int id_category)
+        { 
+            int pageSize = 12;
+            int pageNumber = (page ?? 1);
+
+            List<Shoes> list = await GetProductbyidcategory(id_category);
+            return View(list.ToPagedList(pageNumber, pageSize));
+        }
+
         private async Task<List<Shoes>> GetProduct()   // Hàm Gọi API trả về list user
         {
             string baseUrl = Request.Url.Scheme + "://" + Request.Url.Authority +
@@ -54,5 +68,23 @@ namespace WebApiProject.Controllers
                 return null;
             }
         }
+
+        private async Task<List<Shoes>> GetProductbyidcategory(int id_category)   // Hàm Gọi API trả về list user
+        {
+            string baseUrl = Request.Url.Scheme + "://" + Request.Url.Authority +
+                Request.ApplicationPath.TrimEnd('/') + "/";   // Lấy base uri của website
+            using (var httpClient = new HttpClient())
+            {
+                HttpResponseMessage res = await httpClient.GetAsync(baseUrl + "api/Products/Getproductbyid_category?id_category=" + id_category);
+                if (res.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    List<Shoes> list = new List<Shoes>();
+                    list = res.Content.ReadAsAsync<List<Shoes>>().Result;
+                    return list;
+                }
+                return null;
+            }
+        }
+
     }
 }

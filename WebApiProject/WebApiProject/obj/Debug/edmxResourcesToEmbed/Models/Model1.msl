@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-  <EntityContainerMapping StorageEntityContainer="Database1ModelStoreContainer" CdmEntityContainer="Database1Entities">
+  <EntityContainerMapping StorageEntityContainer="Database1ModelStoreContainer" CdmEntityContainer="Database1Entities1">
     <EntitySetMapping Name="Brands">
       <EntityTypeMapping TypeName="Database1Model.Brand">
         <MappingFragment StoreEntitySet="Brands">
@@ -30,7 +30,7 @@
         <MappingFragment StoreEntitySet="Order_Details">
           <ScalarProperty Name="order_details_id" ColumnName="order_details_id" />
           <ScalarProperty Name="order_id" ColumnName="order_id" />
-          <ScalarProperty Name="product_id" ColumnName="product_id" />
+          <ScalarProperty Name="product_size_quantity_id" ColumnName="product_size_quantity_id" />
           <ScalarProperty Name="price_oder" ColumnName="price_oder" />
           <ScalarProperty Name="quantity" ColumnName="quantity" />
         </MappingFragment>

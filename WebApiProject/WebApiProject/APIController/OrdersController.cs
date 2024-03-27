@@ -10,34 +10,53 @@ namespace WebApiProject.APIController
 {
     public class OrdersController : ApiController
     {
-        Database1Entities db = new Database1Entities();
+        Database1Entities1 db = new Database1Entities1();
         [HttpGet]
-        public List<Order> Getorders(string id_user)
+        public IHttpActionResult Getorders(string id_user)
         {
-            return db.Orders.Where(c => c.user_id == id_user).ToList();
+            var list = db.Orders.Where(c => c.user_id == id_user).
+            Select(o=>new DonHang {
+                orders_id = o.orders_id,
+                user_id = o.user_id,
+                total_amount = o.total_amount,
+                orders_date = o.orders_date,
+                shipping_address = o.shipping_address,
+                user_phone = o.user_phone,
+                oderstatus_id = o.oderstatus_id,
+                status = o.oderStatusCheck.status
+            }).ToList();
+
+            return Ok(list);
         }
 
-        [HttpGet]
-        public List<Order_Details> Getdetail(string id_order)
-        {
-            return db.Order_Details.Where(c => c.order_id == id_order).ToList();
+      
+
+        [HttpPost] 
+        public HttpResponseMessage PostOrder(DonHang o)
+        { 
+                    // Tạo một đối tượng Order mới từ đối tượng DonHang được gửi lên
+                    Order newOrder = new Order
+                    {
+                        orders_id = o.orders_id,
+                        user_id = o.user_id,
+                        total_amount = o.total_amount,
+                        orders_date = DateTime.Now, // Sử dụng thời gian hiện tại cho ngày đặt hàng
+                        shipping_address = o.shipping_address,
+                        user_phone = o.user_phone,
+                        oderstatus_id = o.oderstatus_id,
+                    };
+
+                    // Thêm đối tượng mới vào DbSet của Orders và lưu thay đổi vào cơ sở dữ liệu
+                    db.Orders.Add(newOrder);
+                    db.SaveChanges();
+
+                    // Trả về một phản hồi HTTP 201 Created nếu mọi thứ thành công
+                    return Request.CreateResponse(HttpStatusCode.OK);
+             
+            
         }
 
-        [HttpPost]
-        public HttpResponseMessage PostOrder(Order o)
-        {
-            db.Orders.Add(o);
-            db.SaveChanges();
-            return Request.CreateResponse(HttpStatusCode.OK);
-        }
-
-        [HttpPost]
-        public HttpResponseMessage PostDetail(Order_Details od)
-        {
-            db.Order_Details.Add(od);
-            db.SaveChanges();
-            return Request.CreateResponse(HttpStatusCode.OK);
-        }
+       
 
     }
 }

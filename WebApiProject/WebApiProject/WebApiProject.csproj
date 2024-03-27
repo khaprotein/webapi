@@ -58,6 +58,12 @@
     <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.Bson.1.0.2\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
     </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
@@ -144,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="APIController\CartController.cs" />
+    <Compile Include="APIController\DetailController.cs" />
     <Compile Include="APIController\OrdersController.cs" />
     <Compile Include="APIController\ProductsController.cs" />
     <Compile Include="APIController\UsersController.cs" />
@@ -185,7 +192,8 @@
     <Compile Include="Controllers\Login\RegisterController.cs" />
     <Compile Include="Controllers\Orders\cartController.cs" />
     <Compile Include="Controllers\Orders\ordersController.cs" />
-    <Compile Include="Controllers\productController.cs" />
+    <Compile Include="Controllers\ShopController.cs" />
+    <Compile Include="Controllers\testController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -196,8 +204,10 @@
     <Compile Include="Models\Category.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ChiTietDH.cs" />
     <Compile Include="Models\DangKy.cs" />
     <Compile Include="Models\DangNhap.cs" />
+    <Compile Include="Models\DonHang.cs" />
     <Compile Include="Models\GioHang.cs" />
     <Compile Include="Models\Model1.Context.cs">
       <AutoGen>True</AutoGen>
@@ -214,6 +224,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\NguoiDung.cs" />
     <Compile Include="Models\oderStatusCheck.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -262,6 +273,7 @@
     <Content Include="Content\dangky.css" />
     <Content Include="Content\dangnhap.css" />
     <Content Include="Content\img\13048085.jpg" />
+    <Content Include="Content\img\conhantao.jpeg" />
     <Content Include="Content\img\conhantao\Adidas\1.jpg" />
     <Content Include="Content\img\conhantao\Adidas\2.jpg" />
     <Content Include="Content\img\conhantao\Adidas\3.jpg" />
@@ -297,6 +309,7 @@
     <Content Include="Content\img\conhantao\Zocker\3.jpg" />
     <Content Include="Content\img\conhantao\Zocker\4.jpg" />
     <Content Include="Content\img\conhantao\Zocker\5.jpg" />
+    <Content Include="Content\img\cotunhien.jpg" />
     <Content Include="Content\img\cotunhien\Adidas\1.jpg" />
     <Content Include="Content\img\cotunhien\Adidas\2.jpg" />
     <Content Include="Content\img\cotunhien\Adidas\3.jpg" />
@@ -348,6 +361,7 @@
     <Content Include="Content\img\futsal\Nike\5.jpg" />
     <Content Include="Content\img\futsal\Nike\6.jpg" />
     <Content Include="Content\img\futsal\Nike\7.jpg" />
+    <Content Include="Content\img\sanfutsal.jpg" />
     <Content Include="Content\lib\easing\easing.js" />
     <Content Include="Content\lib\easing\easing.min.js" />
     <Content Include="Content\lib\lightbox\css\lightbox.min.css" />
@@ -368,13 +382,14 @@
     <Content Include="Content\lib\owlcarousel\owl.carousel.min.js" />
     <Content Include="Content\lib\waypoints\links.php" />
     <Content Include="Content\lib\waypoints\waypoints.min.js" />
+    <Content Include="Content\PagedList.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Models\Model1.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Model1.Context.cs</LastGenOutput>
       <DependentUpon>Model1.edmx</DependentUpon>
+      <LastGenOutput>Model1.Context.cs</LastGenOutput>
     </Content>
     <Content Include="Models\Model1.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -384,13 +399,6 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\lib\owlcarousel\LICENSE" />
-    <EntityDeploy Include="Models\Model1.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Model1.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\Model1.edmx.diagram">
-      <DependentUpon>Model1.edmx</DependentUpon>
-    </Content>
     <Content Include="Areas\HelpPage\Views\Web.config" />
     <Content Include="Areas\HelpPage\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\ResourceModel.cshtml" />
@@ -410,6 +418,13 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
+    <EntityDeploy Include="Models\Model1.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Model1.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\Model1.edmx.diagram">
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -432,13 +447,17 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Shared\_Header.cshtml" />
-    <Content Include="Views\product\Index.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\Register\Index.cshtml" />
     <Content Include="Views\cart\Index.cshtml" />
-    <Content Include="Views\product\ProductDetail.cshtml" />
     <Content Include="Views\orders\Index.cshtml" />
     <Content Include="Views\account\Info.cshtml" />
+    <Content Include="Views\orders\detail.cshtml" />
+    <Content Include="Views\test\Index.cshtml" />
+    <Content Include="Views\Shop\Index.cshtml" />
+    <Content Include="Views\Shop\ProductDetail.cshtml" />
+    <Content Include="Views\Home\Getlistbyid_category.cshtml" />
+    <Content Include="Views\Shop\Getlistbyid_category.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\img\conhantao\Asics\" />

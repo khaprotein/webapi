@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "product";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    WebApiProject.Models.Database1Entities db = new WebApiProject.Models.Database1Entities();
+    WebApiProject.Models.Database1Entities1 db = new WebApiProject.Models.Database1Entities1();
     var cateory = db.Categories.Where(c => c.category_id == Model.category_id).FirstOrDefault();
 }
 <!-- Single Product Start -->
@@ -25,8 +25,8 @@
                         <h4 class="fw-bold mb-3">@Model.product_name</h4>
                         <p class="mb-3">Loại giày: @cateory.category_name</p>
                         @*<p class="mb-4">@Model.description</p>*@
-                    <form action="@Url.Action("Addtocart", "cart")" method="post"
-                          @Html.Hidden("id_product", Model.product_id)
+                        <form action="@Url.Action("Addtocart", "cart")" method="post"
+                              @Html.Hidden("id_product", Model.product_id)
                               <div class="mb-3">
                                     <label for="sizeSelect" class="form-label">Chọn kích thước:</label>
                                     <select name="id_size" id="sizeSelect" class="form-select">

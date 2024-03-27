@@ -17,6 +17,7 @@ namespace WebApiProject.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Product_Size_Quantity()
         {
+            this.Order_Details = new HashSet<Order_Details>();
             this.Shopping_Cart = new HashSet<Shopping_Cart>();
         }
     
@@ -25,6 +26,8 @@ namespace WebApiProject.Models
         public string size { get; set; }
         public Nullable<int> quantity { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Order_Details> Order_Details { get; set; }
         public virtual Product Product { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Shopping_Cart> Shopping_Cart { get; set; }

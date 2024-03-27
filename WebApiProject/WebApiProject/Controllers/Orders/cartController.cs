@@ -12,7 +12,8 @@ namespace WebApiProject.Controllers.Orders
     public class cartController : Controller
     {
         // GET: cart
-        Database1Entities db = new Database1Entities();
+        Database1Entities1 db = new Database1Entities1();
+        private static int _latestCartId = 0;
         public async Task<ActionResult> Index()
         {
             var user = (User)Session["user"];
@@ -58,8 +59,7 @@ namespace WebApiProject.Controllers.Orders
         }
 
         public class CartIdGenerator
-        {
-            private static int _latestCartId = 0;
+        {      
             public static string GenerateCartId()
             {
                 _latestCartId++;
@@ -68,8 +68,8 @@ namespace WebApiProject.Controllers.Orders
         }
        
         [HttpPost]
-        public async Task<ActionResult> Addtocart(string id_product,decimal price, int id_size, int soluong)
-        {
+        public async Task<ActionResult> Addtocart(string id_product, int id_size, int soluong, decimal price)
+        { 
             var user = (User)Session["user"];
             if (user != null)
             {
@@ -113,22 +113,29 @@ namespace WebApiProject.Controllers.Orders
         }
 
         [HttpPost]
-        public async Task<ActionResult> UpdateCart(string userId, string productId, int sizequantityId, int quantity)
+        public async Task<ActionResult> UpdateCart(string cartId, string productId, int sizequantityId, int quantity)
         {
-            Shopping_Cart updateRequest = new Shopping_Cart
+            var user = (User)Session["user"];
+
+            // Tạo đối tượng GioHang để cập nhật giỏ hàng
+            GioHang updateRequest = new GioHang
             {
-                user_id = productId,
-                product_id = userId,   
+                cart_id = cartId,
+                product_id = productId, // Đã chỉnh sửa từ user.user_id thành productId
                 product_size_quantity_id = sizequantityId,
-                quantity = quantity
+                quantity = quantity,
+                totalprice = 0 // Có thể cần cập nhật lại giá trị này tùy thuộc vào logic của ứng dụng
             };
 
             string baseUrl = Request.Url.Scheme + "://" + Request.Url.Authority +
-                Request.ApplicationPath.TrimEnd('/') + "/";
+                             Request.ApplicationPath.TrimEnd('/') + "/";
             using (var httpClient = new HttpClient())
             {
-                HttpResponseMessage res = await httpClient.PostAsJsonAsync(baseUrl + "api/Cart/PutCart", updateRequest);
-                if (res.StatusCode == System.Net.HttpStatusCode.OK)
+                // Gửi yêu cầu PUT đến API để cập nhật giỏ hàng
+                HttpResponseMessage res = await httpClient.PutAsJsonAsync(baseUrl + "api/Cart/PutCart", updateRequest);
+
+                // Kiểm tra kết quả trả về từ yêu cầu API
+                if (res.IsSuccessStatusCode)
                 {
                     TempData["SuccessMessage"] = "Đã cập nhật giỏ hàng!";
                 }
@@ -137,9 +144,11 @@ namespace WebApiProject.Controllers.Orders
                     TempData["ErrorMessage"] = "Có lỗi xảy ra khi cập nhật giỏ hàng!";
                 }
 
+                // Chuyển hướng người dùng đến trang Index của Cart sau khi cập nhật
                 return RedirectToAction("Index", "Cart");
             }
         }
+
 
 
         public async Task<ActionResult> DeleteCart(string cartid)

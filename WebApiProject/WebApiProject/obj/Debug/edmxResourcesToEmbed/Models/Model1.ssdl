@@ -27,7 +27,7 @@
     </Key>
     <Property Name="order_details_id" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="order_id" Type="varchar" MaxLength="20" />
-    <Property Name="product_id" Type="varchar" MaxLength="20" />
+    <Property Name="product_size_quantity_id" Type="int" />
     <Property Name="price_oder" Type="decimal" Precision="10" Scale="2" />
     <Property Name="quantity" Type="int" />
   </EntityType>
@@ -112,7 +112,7 @@
     <Property Name="address" Type="varchar" MaxLength="255" />
     <Property Name="phonenumber" Type="varchar" MaxLength="15" />
   </EntityType>
-  <Association Name="FK__Order_Det__order__571DF1D5">
+  <Association Name="FK__Order_Det__order__6E01572D">
     <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
     <End Role="Order_Details" Type="Self.Order_Details" Multiplicity="*" />
     <ReferentialConstraint>
@@ -124,15 +124,15 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__Order_Det__produ__5812160E">
-    <End Role="Products" Type="Self.Products" Multiplicity="0..1" />
+  <Association Name="FK__Order_Det__produ__5CD6CB2B">
+    <End Role="Product_Size_Quantity" Type="Self.Product_Size_Quantity" Multiplicity="0..1" />
     <End Role="Order_Details" Type="Self.Order_Details" Multiplicity="*" />
     <ReferentialConstraint>
-      <Principal Role="Products">
-        <PropertyRef Name="product_id" />
+      <Principal Role="Product_Size_Quantity">
+        <PropertyRef Name="product_size_quantity_id" />
       </Principal>
       <Dependent Role="Order_Details">
-        <PropertyRef Name="product_id" />
+        <PropertyRef Name="product_size_quantity_id" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -293,12 +293,12 @@
     <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Shopping_Cart" EntityType="Self.Shopping_Cart" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
-    <AssociationSet Name="FK__Order_Det__order__571DF1D5" Association="Self.FK__Order_Det__order__571DF1D5">
+    <AssociationSet Name="FK__Order_Det__order__6E01572D" Association="Self.FK__Order_Det__order__6E01572D">
       <End Role="Orders" EntitySet="Orders" />
       <End Role="Order_Details" EntitySet="Order_Details" />
     </AssociationSet>
-    <AssociationSet Name="FK__Order_Det__produ__5812160E" Association="Self.FK__Order_Det__produ__5812160E">
-      <End Role="Products" EntitySet="Products" />
+    <AssociationSet Name="FK__Order_Det__produ__5CD6CB2B" Association="Self.FK__Order_Det__produ__5CD6CB2B">
+      <End Role="Product_Size_Quantity" EntitySet="Product_Size_Quantity" />
       <End Role="Order_Details" EntitySet="Order_Details" />
     </AssociationSet>
     <AssociationSet Name="FK__Orders__oderstat__5629CD9C" Association="Self.FK__Orders__oderstat__5629CD9C">

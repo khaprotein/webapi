@@ -1,11 +1,13 @@
 ﻿@model IEnumerable<WebApiProject.Models.GioHang>
-    @using WebApiProject.Models;
+@using WebApiProject.Models;
 @{
     ViewBag.Title = "Cart";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    WebApiProject.Models.Database1Entities db = new WebApiProject.Models.Database1Entities();
+    WebApiProject.Models.Database1Entities1 db = new WebApiProject.Models.Database1Entities1();
 }
 
+<div class="container py-5">
+</div>
 <div>
     @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage) || !string.IsNullOrEmpty(ViewBag.ErrorMessage))
     {
@@ -57,7 +59,7 @@
                             <td>
                                 @using (Html.BeginForm("UpdateCart", "cart", FormMethod.Post))
                                 {
-                                    @Html.Hidden("userId", item.user_id)
+                                    @Html.Hidden("cartId", item.cart_id)
                                     @Html.Hidden("productId", item.product_id)
                                     @Html.Hidden("sizequantityId", item.product_size_quantity_id)
                                     <div class="input-group quantity mt-4" style="width: 100px;">
@@ -70,7 +72,7 @@
                                 <p class="mb-0 mt-4">@((item.quantity * item.totalprice))</p>
                             </td>
                             <td>
-                                <a href="@Url.Action("ProductDetail","product",new { id_product = item.product_id})"  > <p class="mb-0 mt-4"> Xem</p></a>
+                                <a href="@Url.Action("ProductDetail","product",new { id_product = item.product_id})"> <p class="mb-0 mt-4"> Xem</p></a>
                             </td>
                             <td>
                                 @using (Html.BeginForm("DeleteCart", "cart", FormMethod.Post))
@@ -83,16 +85,16 @@
                             </td>
                         </tr>
                     }
-                    
+
                     <tr>
                         <td colspan="4"></td>
                         <td colspan="2" class="text-end">
-                            @using (Html.BeginForm("Createorder", "order", FormMethod.Post))
+                            @using (Html.BeginForm("Createorder", "orders", FormMethod.Post))
                             {
                                 User khachhang = null;
                                 if (Session["user"] != null)
                                 {
-                                     khachhang = (User)Session["user"];
+                                    khachhang = (User)Session["user"];
                                 }
                                 <div class="input-group mt-4">
                                     <p class="mb-0 mt-2">Địa chỉ giao hàng:</p>

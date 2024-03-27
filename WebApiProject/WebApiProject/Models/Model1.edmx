@@ -32,7 +32,7 @@
           </Key>
           <Property Name="order_details_id" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="order_id" Type="varchar" MaxLength="20" />
-          <Property Name="product_id" Type="varchar" MaxLength="20" />
+          <Property Name="product_size_quantity_id" Type="int" />
           <Property Name="price_oder" Type="decimal" Precision="10" Scale="2" />
           <Property Name="quantity" Type="int" />
         </EntityType>
@@ -117,7 +117,7 @@
           <Property Name="address" Type="varchar" MaxLength="255" />
           <Property Name="phonenumber" Type="varchar" MaxLength="15" />
         </EntityType>
-        <Association Name="FK__Order_Det__order__571DF1D5">
+        <Association Name="FK__Order_Det__order__6E01572D">
           <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
           <End Role="Order_Details" Type="Self.Order_Details" Multiplicity="*" />
           <ReferentialConstraint>
@@ -129,15 +129,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Order_Det__produ__5812160E">
-          <End Role="Products" Type="Self.Products" Multiplicity="0..1" />
+        <Association Name="FK__Order_Det__produ__5CD6CB2B">
+          <End Role="Product_Size_Quantity" Type="Self.Product_Size_Quantity" Multiplicity="0..1" />
           <End Role="Order_Details" Type="Self.Order_Details" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Products">
-              <PropertyRef Name="product_id" />
+            <Principal Role="Product_Size_Quantity">
+              <PropertyRef Name="product_size_quantity_id" />
             </Principal>
             <Dependent Role="Order_Details">
-              <PropertyRef Name="product_id" />
+              <PropertyRef Name="product_size_quantity_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -298,12 +298,12 @@
           <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Shopping_Cart" EntityType="Self.Shopping_Cart" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__Order_Det__order__571DF1D5" Association="Self.FK__Order_Det__order__571DF1D5">
+          <AssociationSet Name="FK__Order_Det__order__6E01572D" Association="Self.FK__Order_Det__order__6E01572D">
             <End Role="Orders" EntitySet="Orders" />
             <End Role="Order_Details" EntitySet="Order_Details" />
           </AssociationSet>
-          <AssociationSet Name="FK__Order_Det__produ__5812160E" Association="Self.FK__Order_Det__produ__5812160E">
-            <End Role="Products" EntitySet="Products" />
+          <AssociationSet Name="FK__Order_Det__produ__5CD6CB2B" Association="Self.FK__Order_Det__produ__5CD6CB2B">
+            <End Role="Product_Size_Quantity" EntitySet="Product_Size_Quantity" />
             <End Role="Order_Details" EntitySet="Order_Details" />
           </AssociationSet>
           <AssociationSet Name="FK__Orders__oderstat__5629CD9C" Association="Self.FK__Orders__oderstat__5629CD9C">
@@ -389,11 +389,11 @@
           </Key>
           <Property Name="order_details_id" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="order_id" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="product_id" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="product_size_quantity_id" Type="Int32" />
           <Property Name="price_oder" Type="Decimal" Precision="10" Scale="2" />
           <Property Name="quantity" Type="Int32" />
-          <NavigationProperty Name="Order" Relationship="Self.FK__Order_Det__order__571DF1D5" FromRole="Order_Details" ToRole="Orders" />
-          <NavigationProperty Name="Product" Relationship="Self.FK__Order_Det__produ__5812160E" FromRole="Order_Details" ToRole="Products" />
+          <NavigationProperty Name="Product_Size_Quantity" Relationship="Self.FK__Order_Det__produ__5CD6CB2B" FromRole="Order_Details" ToRole="Product_Size_Quantity" />
+          <NavigationProperty Name="Order" Relationship="Database1Model.FK__Order_Det__order__6E01572D" FromRole="Order_Details" ToRole="Order" />
         </EntityType>
         <EntityType Name="Order">
           <Key>
@@ -407,8 +407,8 @@
           <Property Name="user_phone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="oderstatus_id" Type="Int32" />
           <NavigationProperty Name="oderStatusCheck" Relationship="Self.FK__Orders__oderstat__5629CD9C" FromRole="Orders" ToRole="oderStatusCheck" />
-          <NavigationProperty Name="Order_Details" Relationship="Self.FK__Order_Det__order__571DF1D5" FromRole="Orders" ToRole="Order_Details" />
           <NavigationProperty Name="User" Relationship="Self.FK__Orders__user_id__5535A963" FromRole="Orders" ToRole="User" />
+          <NavigationProperty Name="Order_Details" Relationship="Database1Model.FK__Order_Det__order__6E01572D" FromRole="Order" ToRole="Order_Details" />
         </EntityType>
         <EntityType Name="Product_image">
           <Key>
@@ -439,6 +439,7 @@
           <Property Name="product_id" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="size" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="quantity" Type="Int32" />
+          <NavigationProperty Name="Order_Details" Relationship="Self.FK__Order_Det__produ__5CD6CB2B" FromRole="Product_Size_Quantity" ToRole="Order_Details" />
           <NavigationProperty Name="Product" Relationship="Self.FK__Product_S__produ__5070F446" FromRole="Product_Size_Quantity" ToRole="Products" />
           <NavigationProperty Name="Shopping_Cart" Relationship="Self.FK__Shopping___produ__5165187F" FromRole="Product_Size_Quantity" ToRole="Shopping_Cart" />
         </EntityType>
@@ -456,7 +457,6 @@
           <Property Name="detail" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Brand" Relationship="Self.FK__Products__brand___4CA06362" FromRole="Products" ToRole="Brands" />
           <NavigationProperty Name="Category" Relationship="Self.FK__Products__catego__4BAC3F29" FromRole="Products" ToRole="Category" />
-          <NavigationProperty Name="Order_Details" Relationship="Self.FK__Order_Det__produ__5812160E" FromRole="Products" ToRole="Order_Details" />
           <NavigationProperty Name="Product_image" Relationship="Self.FK__Products__produc__4D94879B" FromRole="Products" ToRole="Product_image" />
           <NavigationProperty Name="Product_Review" Relationship="Self.FK__Product_R__produ__4E88ABD4" FromRole="Products" ToRole="Product_Review" />
           <NavigationProperty Name="Product_Size_Quantity" Relationship="Self.FK__Product_S__produ__5070F446" FromRole="Products" ToRole="Product_Size_Quantity" />
@@ -535,27 +535,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Order_Det__order__571DF1D5">
-          <End Role="Orders" Type="Self.Order" Multiplicity="0..1" />
+        <Association Name="FK__Order_Det__produ__5CD6CB2B">
+          <End Role="Product_Size_Quantity" Type="Self.Product_Size_Quantity" Multiplicity="0..1" />
           <End Role="Order_Details" Type="Self.Order_Details" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Orders">
-              <PropertyRef Name="orders_id" />
+            <Principal Role="Product_Size_Quantity">
+              <PropertyRef Name="product_size_quantity_id" />
             </Principal>
             <Dependent Role="Order_Details">
-              <PropertyRef Name="order_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Order_Det__produ__5812160E">
-          <End Role="Products" Type="Self.Product" Multiplicity="0..1" />
-          <End Role="Order_Details" Type="Self.Order_Details" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Products">
-              <PropertyRef Name="product_id" />
-            </Principal>
-            <Dependent Role="Order_Details">
-              <PropertyRef Name="product_id" />
+              <PropertyRef Name="product_size_quantity_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -667,7 +655,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="Database1Entities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="Database1Entities1" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Brands" EntityType="Self.Brand" />
           <EntitySet Name="Categories" EntityType="Self.Category" />
           <EntitySet Name="oderStatusChecks" EntityType="Self.oderStatusCheck" />
@@ -692,12 +680,8 @@
             <End Role="oderStatusCheck" EntitySet="oderStatusChecks" />
             <End Role="Orders" EntitySet="Orders" />
           </AssociationSet>
-          <AssociationSet Name="FK__Order_Det__order__571DF1D5" Association="Self.FK__Order_Det__order__571DF1D5">
-            <End Role="Orders" EntitySet="Orders" />
-            <End Role="Order_Details" EntitySet="Order_Details" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Order_Det__produ__5812160E" Association="Self.FK__Order_Det__produ__5812160E">
-            <End Role="Products" EntitySet="Products" />
+          <AssociationSet Name="FK__Order_Det__produ__5CD6CB2B" Association="Self.FK__Order_Det__produ__5CD6CB2B">
+            <End Role="Product_Size_Quantity" EntitySet="Product_Size_Quantity" />
             <End Role="Order_Details" EntitySet="Order_Details" />
           </AssociationSet>
           <AssociationSet Name="FK__Orders__user_id__5535A963" Association="Self.FK__Orders__user_id__5535A963">
@@ -736,13 +720,29 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Shopping_Cart" EntitySet="Shopping_Cart" />
           </AssociationSet>
+          <AssociationSet Name="FK__Order_Det__order__6E01572D" Association="Database1Model.FK__Order_Det__order__6E01572D">
+            <End Role="Order" EntitySet="Orders" />
+            <End Role="Order_Details" EntitySet="Order_Details" />
+          </AssociationSet>
         </EntityContainer>
+        <Association Name="FK__Order_Det__order__6E01572D">
+          <End Type="Database1Model.Order" Role="Order" Multiplicity="0..1" />
+          <End Type="Database1Model.Order_Details" Role="Order_Details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="orders_id" />
+            </Principal>
+            <Dependent Role="Order_Details">
+              <PropertyRef Name="order_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="Database1ModelStoreContainer" CdmEntityContainer="Database1Entities">
+        <EntityContainerMapping StorageEntityContainer="Database1ModelStoreContainer" CdmEntityContainer="Database1Entities1">
           <EntitySetMapping Name="Brands">
             <EntityTypeMapping TypeName="Database1Model.Brand">
               <MappingFragment StoreEntitySet="Brands">
@@ -772,7 +772,7 @@
               <MappingFragment StoreEntitySet="Order_Details">
                 <ScalarProperty Name="order_details_id" ColumnName="order_details_id" />
                 <ScalarProperty Name="order_id" ColumnName="order_id" />
-                <ScalarProperty Name="product_id" ColumnName="product_id" />
+                <ScalarProperty Name="product_size_quantity_id" ColumnName="product_size_quantity_id" />
                 <ScalarProperty Name="price_oder" ColumnName="price_oder" />
                 <ScalarProperty Name="quantity" ColumnName="quantity" />
               </MappingFragment>

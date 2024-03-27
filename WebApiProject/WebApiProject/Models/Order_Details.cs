@@ -16,11 +16,11 @@ namespace WebApiProject.Models
     {
         public string order_details_id { get; set; }
         public string order_id { get; set; }
-        public string product_id { get; set; }
+        public Nullable<int> product_size_quantity_id { get; set; }
         public Nullable<decimal> price_oder { get; set; }
         public Nullable<int> quantity { get; set; }
     
+        public virtual Product_Size_Quantity Product_Size_Quantity { get; set; }
         public virtual Order Order { get; set; }
-        public virtual Product Product { get; set; }
     }
 }

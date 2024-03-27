@@ -100,3 +100,7 @@ D:\Web_API\WebApiProject\WebApiProject\bin\System.Memory.xml
 D:\Web_API\WebApiProject\WebApiProject\bin\System.Numerics.Vectors.xml
 D:\Web_API\WebApiProject\WebApiProject\bin\System.Runtime.CompilerServices.Unsafe.xml
 D:\Web_API\WebApiProject\WebApiProject\bin\System.Threading.Tasks.Extensions.xml
+D:\Web_API\WebApiProject\WebApiProject\bin\PagedList.dll
+D:\Web_API\WebApiProject\WebApiProject\bin\PagedList.Mvc.dll
+D:\Web_API\WebApiProject\WebApiProject\bin\PagedList.xml
+D:\Web_API\WebApiProject\WebApiProject\bin\PagedList.Mvc.xml
